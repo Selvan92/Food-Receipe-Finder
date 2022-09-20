@@ -1,0 +1,8 @@
+Project title: Recipe Finder
+Project description: 
+User story: 
+Wireflame: png file 
+APIs to be used: 
+1. Recipe - Food - Nutrition (URL: https://rapidapi.com/spoonacular/api/recipe-food-nutrition/)
+2. Microsoft Translator Text (URL: https://rapidapi.com/microsoft-azure-org-microsoft-cognitive-services/api/microsoft-translator-text)                            
+Rough breakdown of tasks: 
