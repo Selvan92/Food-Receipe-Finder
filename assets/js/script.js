@@ -23,8 +23,37 @@ let recipeJson = {"name": "",
 				  "ingredients": "",
 				  "instructions": ""};
 let translatedRecipe ={};
+let mealCategories = [];
+let mealCategoryEl = document.getElementById("mealCategory");
 
-/* function calls */ 
+/* function calls */
+function populateMealCategory(){
+	for(let i = 0; i < mealCategories.length; i++){
+		let optEl = document.createElement('option');
+		optEl.innerHTML = mealCategories[i];
+		optEl.value = mealCategories[i];
+		mealCategoryEl.appendChild(optEl);
+	}
+}
+
+function getMealCategory(){
+	fetch('https://themealdb.p.rapidapi.com/list.php?c=list', optionsMealDB)
+		.then(response => response.json())
+		.then((data) => {
+			for (let i = 0; i < data['meals'].length; i++){
+				mealCategories.unshift(data['meals'][i]['strCategory']);
+			}
+			populateMealCategory();
+			return data;
+			//console.log(mealCategories);
+		})
+		.catch(err => console.error(err));	
+} 
+
+function getRecipesForCategory(){
+
+}
+
 function getRecipe(){
 	fetch('https://themealdb.p.rapidapi.com/search.php?s='+`${meal}`, optionsMealDB)
 		.then((response) => {
@@ -81,7 +110,9 @@ function translateRecipe(){
 /* This function needs to be written for displaying the recipes and its translation. 
    Pls feel free to extend it. */
 function displayRecipe(){
-	getRecipe();		
+	getMealCategory();
+	//populateMealCategory();
+	//getRecipe();		
 }
 
 
