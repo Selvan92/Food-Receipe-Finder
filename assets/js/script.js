@@ -16,6 +16,15 @@ const optionsTranslate = {
 	body: '[{"Text":""}]'
 };
 
+const optionsLanguageList = {
+	method: 'GET',
+	headers: {
+		'X-RapidAPI-Key': 'c52b535671mshe1a06b44b7f40dfp159c1ajsn13d1052232bd',
+		'X-RapidAPI-Host': 'microsoft-translator-text.p.rapidapi.com'
+	}
+};
+
+
 /* The recipe and the translation language values are hard coded in variables meal and translateTo respectively */
 let meal = "chicken";
 let translateTo= "hi";
@@ -24,37 +33,92 @@ let recipeJson = {"name": "",
 				  "instructions": ""};
 let translatedRecipe ={};
 let mealCategories = [];
-let mealCategoryEl = document.getElementById("mealCategory");
+let languages =[];
 
-/* function calls */
 function populateMealCategory(){
 	for(let i = 0; i < mealCategories.length; i++){
 		let optEl = document.createElement('option');
 		optEl.innerHTML = mealCategories[i];
 		optEl.value = mealCategories[i];
-		mealCategoryEl.appendChild(optEl);
+		document.getElementById("mealCategory").appendChild(optEl);
+	}
+}
+
+function populateLanguages(){
+	Object.keys(languages).forEach((language) => { 
+		let optEl = document.createElement('option');	
+		optEl.innerHTML = languages[`${language}`];
+		optEl.value = language;
+		document.getElementById("languages").appendChild(optEl);
+	})	
+}
+
+function populateRecipeByCategory(recipesByCategory){
+	for(let i = 0; i < recipesByCategory.length; i++){
+		let optEl = document.createElement('option');
+		optEl.innerHTML = recipesByCategory[i];
+		optEl.value = recipesByCategory[i];
+		document.getElementById("recipes").appendChild(optEl);
 	}
 }
 
 function getMealCategory(){
+	console.log("Getting Meal Category");
 	fetch('https://themealdb.p.rapidapi.com/list.php?c=list', optionsMealDB)
 		.then(response => response.json())
 		.then((data) => {
 			for (let i = 0; i < data['meals'].length; i++){
 				mealCategories.unshift(data['meals'][i]['strCategory']);
 			}
+			console.log(mealCategories);
 			populateMealCategory();
 			return data;
-			//console.log(mealCategories);
 		})
 		.catch(err => console.error(err));	
 } 
 
-function getRecipesForCategory(){
+function getLanguages(){
+	fetch('https://microsoft-translator-text.p.rapidapi.com/languages?api-version=3.0', optionsLanguageList)
+		.then(response => response.json())
+		.then((data) => {
+			Object.keys(data['translation']).forEach((key) => {
+				languages[`${key}`] = data['translation'][`${key}`]['name'];
+			})
+			console.log(languages);	
+			populateLanguages();
+			return data;		
+		})
+		.catch(err => console.error(err));
+}
 
+function getData(){
+	getMealCategory();
+	getLanguages();
+}
+
+function getRecipesForCategory(){
+	categoryValue = document.getElementById("mealCategory").value;
+	let recipesByCategory = [];
+	fetch('https://themealdb.p.rapidapi.com/filter.php?c='+`${categoryValue}`, optionsMealDB)
+		.then(response => response.json())
+		.then(data => {
+			for (let i = 0; i < data['meals'].length; i++){
+				recipesByCategory.unshift(data['meals'][i]['strMeal']);
+			}
+			populateRecipeByCategory(recipesByCategory);
+			console.log(recipesByCategory); 
+			console.log(data);
+			return data;
+		})
+		.catch(err => console.error(err)); 
+	/*$('#mealCategory').change(function(){
+		alert($(this).val());
+	})*/
 }
 
 function getRecipe(){
+	meal = document.getElementById("recipes").value;
+	translateTo = document.getElementById("languages").value;
 	fetch('https://themealdb.p.rapidapi.com/search.php?s='+`${meal}`, optionsMealDB)
 		.then((response) => {
 			return response.json();
@@ -110,9 +174,8 @@ function translateRecipe(){
 /* This function needs to be written for displaying the recipes and its translation. 
    Pls feel free to extend it. */
 function displayRecipe(){
-	getMealCategory();
-	//populateMealCategory();
-	//getRecipe();		
+	getRecipe();
+	//Satya's display code		
 }
 
 
