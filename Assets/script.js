@@ -4,7 +4,7 @@ var landingPage=document.getElementById("landingPage")
 //dynamic elements added
 var resultHeader=document.createElement("h1");
 var recipeResult=document.createElement("div");
-var resultTranslater=document.createElement("div");
+//var resultTranslater=document.createElement("div");
 var homeButton=document.createElement("button");
 
 
@@ -19,7 +19,7 @@ homeButton.addEventListener("clic",function(){
 const optionsMealDB = {
 	method: 'GET',
 	headers: {
-		'X-RapidAPI-Key': 'c52b535671mshe1a06b44b7f40dfp159c1ajsn13d1052232bd',
+		'X-RapidAPI-Key': '9f71e19262msh37c303dd17e0edbp15e1d3jsn1c30fd01ec29',
 		'X-RapidAPI-Host': 'themealdb.p.rapidapi.com'
 	}
 };
@@ -175,6 +175,8 @@ function getRecipe(){
 
 function translateRecipe(){
 	let translateObj = "";
+	let resultTranslater =document.createElement("div");
+	resultPage.appendChild(resultTranslater);
 	Object.keys(recipeJson).forEach((key) => {
 		translateObj = [{"Text": `${recipeJson[`${key}`]}`}];
 		optionsTranslate['body'] = JSON.stringify(translateObj);
@@ -188,24 +190,34 @@ function translateRecipe(){
 				})					
 			.catch(err => console.error(err)); 
             console.log(translatedRecipe);	
-	});
+			resultTranslater.innerHTML += translatedRecipe[`${key}`];
+			console.log(resultTranslater);
+ 	});
+	
 	
 }
 
 // This function needs to be written for displaying the recipes and its translation. 
-  // Pls feel free to extend it. 
-function displayRecipe(){
-	getRecipe();
-   
-            landingPage.classList.add("hide");
-            resultPage.classList.remove("hide");
-            resultHeader.innerHTML=recipeJson[0].name;
-            recipeResult.innerHTML=recipeJson[0].ingredients + recipeJson[0].instructions;	
+  // Pls feel free to extend it.
+function display(){
+	
+    resultHeader.innerHTML=recipeJson["name"];
+    recipeResult.innerHTML=recipeJson["ingredients"] + recipeJson["instructions"];
+	//resultTranslater.innerHTML=translatedRecipe["name"] + translatedRecipe["ingredients"] + translatedRecipe["instructions"];          
+   	resultPage.append(resultHeader,recipeResult,resultTranslater);
+}
+		
+        	
 
-            console.log(recipeJson);
-    resultTranslater.innerHTML=translatedRecipe[0].name + translatedRecipe[0].ingredients + translatedRecipe[0].instructions;
-    
+  
+function displayRecipe(){
+	landingPage.classList.add("hide");
+    resultPage.classList.remove("hide");
+	//getRecipe(); this have been temporarily commented out because the server is down
+	recipeJson={"ingredients":"1kg ham,1 pound chicken", "name":"Arrabita", "instructions":"Take a bowl and boil the water."};
+ 
+	translateRecipe();
+}
    
-    resultPage.append(resultHeader,recipeResult,resultTranslater);
-    }
+            
 
