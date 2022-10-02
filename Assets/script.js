@@ -4,22 +4,21 @@ var landingPage=document.getElementById("landingPage")
 //dynamic elements added
 var resultHeader=document.getElementById("resultHeader");
 var recipeResult=document.getElementById("recipeResult");
-//var resultTranslater=document.createElement("div");
 var homeButton=document.getElementById("homeButton");
+let resultTranslater =document.getElementById("resultTranslater");
 
-
-homeButton.addEventListener("clic",function(){ 
+homeButton.addEventListener("click",function(){ 
 	homeButton.innerHTML="Home";
     landingPage.classList.remove("hide");
     resultPage.classList.add("hide");
-	resultPage.append(homeButton);
+
 
 });
 
 const optionsMealDB = {
 	method: 'GET',
 	headers: {
-		'X-RapidAPI-Key': '9f71e19262msh37c303dd17e0edbp15e1d3jsn1c30fd01ec29',
+		'X-RapidAPI-Key': 'c52b535671mshe1a06b44b7f40dfp159c1ajsn13d1052232bd',
 		'X-RapidAPI-Host': 'themealdb.p.rapidapi.com'
 	}
 };
@@ -45,7 +44,7 @@ const optionsLanguageList = {
 
 /* The recipe and the translation language values are hard coded in variables meal and translateTo respectively */
 let meal = "chicken";
-let translateTo="hi";
+let translateTo= "hi";
 let recipeJson = {"name": "",  
 				  "ingredients": "",
 				  "instructions": ""};
@@ -92,7 +91,11 @@ function getMealCategory(){
 			populateMealCategory();
 			return data;
 		})
-		//.catch(err => console.error(err));	
+		.catch(err => {
+			mealCategories =["Vegetarian", "Vegan", "Breakfast", "Dessert", "Chicken", "Beef", "Soups", "Salads"];
+			populateMealCategory();
+			console.error(err);
+		})	
 } 
 
 function getLanguages(){
@@ -128,9 +131,16 @@ function getRecipesForCategory(){
 			console.log(data);
 			return data;
 		})
-		.catch(err => console.error(err)); 
-	
-}
+		.catch(err => {
+			recipesByCategory = ["Arrabiatta Penne", "Avacado Sandwich", "Garlic Bread", "Enchidillas"];
+			populateRecipeByCategory(recipesByCategory);
+			console.error(err);
+		}) 
+	}
+	/*$('#mealCategory').change(function(){
+		alert($(this).val());
+	})*/
+
 
 function getRecipe(){
 	meal = document.getElementById("recipes").value;
@@ -155,11 +165,15 @@ function getRecipe(){
 			}
 			recipeJson['instructions'] = data['meals'][0].strInstructions;
 			console.log(recipeJson);
-			translateRecipe();	
-
-            
+			translateRecipe();		
 		})
-		.catch(err => console.error(err));
+		.catch(err => {
+			recipeJson['name'] = "Arrabiatta Penne";
+			recipeJson['ingredients'] = ["250 gms penne pasta", "100 gms cheese", "5 ml olive oil"];
+			recipeJson['instructions'] = ["Boil the water.\r\n Add Pasta. After the pasta is cooked strain it. \r\n Heat olive oil. Add pasta, cheese and salt. Add some tomato ketchup\r\n"];
+			console.log(recipeJson);
+			translateRecipe();
+			console.error(err)});
 }
 
 /*The translate api used here throws the following error 
@@ -171,12 +185,8 @@ function getRecipe(){
    This error happens when the hhtp request's header claim the content to be gzip encoded but it is not. 
    Hence gzip encoding needs to be disabled at the browser end. Follow the below link
    Solution 1: Disabling G-Zip Encoding @ https://appuals.com/how-to-fix-err_content_decoding_failed-error/ */ 
-
-
 function translateRecipe(){
 	let translateObj = "";
-	let resultTranslater =document.getElementById("resultTranslater");
-	resultPage.appendChild(resultTranslater);
 	Object.keys(recipeJson).forEach((key) => {
 		translateObj = [{"Text": `${recipeJson[`${key}`]}`}];
 		optionsTranslate['body'] = JSON.stringify(translateObj);
@@ -189,23 +199,12 @@ function translateRecipe(){
 					return translatedRecipe;
 				})					
 			.catch(err => console.error(err)); 
-            console.log(translatedRecipe);	
-			resultTranslater.innerHTML += translatedRecipe[`${key}`];
-			console.log(resultTranslater);
- 	});
-	
-	
+	});
+	console.log(translatedRecipe);	
 }
-
 // This function needs to be written for displaying the recipes and its translation. 
   // Pls feel free to extend it.
-function display(){
-	
-    resultHeader.innerHTML=recipeJson["name"];
-    recipeResult.innerHTML=recipeJson["ingredients"] + recipeJson["instructions"];
-	//resultTranslater.innerHTML=translatedRecipe["name"] + translatedRecipe["ingredients"] + translatedRecipe["instructions"];          
-   	resultPage.append(resultHeader,recipeResult,resultTranslater);
-}
+
 		
         	
 
@@ -215,8 +214,10 @@ function displayRecipe(){
     resultPage.classList.remove("hide");
 	//getRecipe(); this have been temporarily commented out because the server is down
 	recipeJson={"ingredients":"1kg ham,1 pound chicken", "name":"Arrabita", "instructions":"Take a bowl and boil the water."};
- 
-	translateRecipe();
+	resultHeader.innerHTML=recipeJson["name"];
+    recipeResult.innerHTML=recipeJson["ingredients"] + recipeJson["instructions"];
+	resultTranslater.innerHTML=translatedRecipe["name"] + translatedRecipe["ingredients"] + translatedRecipe["instructions"];
+	
 }
    
             
