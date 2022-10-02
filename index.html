@@ -4,10 +4,8 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <!-- <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous"> -->
     <title>gLocal Recipe</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma.min.css">
-    <script src="https://kit.fontawesome.com/4ea6f33e15.js" crossorigin="anonymous"></script>
     <link rel="stylesheet" href="style.css"></script>
     
 </head>
@@ -17,7 +15,7 @@
     <nav class="section has-background-info pt-5 pb-5">
         <div class="level-right">
             <div class="level-item">
-                <p class="title is-size-4 has-text-white">Recipe Finder</p>
+                <p class="title is-size-4 has-text-white">gLocal Recipe</p>
             </div>
         </div>
     </nav>
@@ -32,141 +30,40 @@
     <section class="mt-3 mb-3">
         <div class="container">   
             <div class="columns">
-                <div class="column is-4">
-                    <label for="Meal Category">Meal Category:</label>
-                    <select name="mealCategory" id="mealCategory"  onchange="getRecipesForCategory()"></select>
-                    <label  for="Recipes">Recipes:</label>
-                    <select name="recipes" id="recipes"></select>
-                    <label  for="Languages">Languages:</label>
-                    <select name="languages" id="languages"></select>
-                    <button  class="button is-link is-normal" id="Recipe" onclick="displayRecipe()">our Glocal Recipe</button>
+                <div class="column is-10">
+                    <label for="MealCategory" class="title is-size-5">Meal Category:</label>
+                    <div class="select is-info">
+                        <select name="mealCategory" id="mealCategory"  onchange="getRecipesForCategory()"></select>
+                    </div>
+                    <label  for="Recipes" class="title is-size-5 ml-1">Recipes:</label>
+                    <div class="select is-info">
+                        <select name="recipes" id="recipes"></select>
+                    </div>
+                    <label  for="Languages" class="title is-size-5 ml-1">Languages:</label>
+                        <div class="select is-info">
+                            <select name="languages" id="languages"></select>
+                        </div>
+                    <button  class="button is-link is-normal ml-3" id="Recipe" onclick="displayRecipe()">our Glocal Recipe</button>
                 </div>
             </div>
         </div>
      </section>
-
-     <section class="section has-background-light">
-        <div class="container">
-            <div class="columns is-multiline">
-                <div class="column is-half">
-                    <article class="media notification has-background-white">
-                        <figure class="media-left">
-                            <span class="icon">
-                                <i class="fa-solid fa-utensils fa-lg"></i>
-                            </span>
-                        </figure>
-                        <div class="media-content">
-                            <div class="content">
-                                <h1 class="title is-size-4">History 1</h1>
-                                <p class="subtitle is-size-5">
-                                    Recipe: 
-                                </p>
-                                <div class="card">
-                                    <div class="card-content">
-                                      <div class="content">
-                                        Lorem ipsum leo risus, porta ac consectetur ac, vestibulum at eros. Donec id elit non mi porta gravida at eget metus. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Cras mattis consectetur purus sit amet fermentum.
-                                      </div>
-                                    </div>
-                                  </div>
-                            </div>
-                        </div>
-                    </article>
-                </div>
-
-                <div class="column is-half">
-                    <article class="media notification has-background-white">
-                        <figure class="media-left">
-                            <span class="icon">
-                                <i class="fa-solid fa-utensils fa-lg"></i>
-                            </span>
-                        </figure>
-                        <div class="media-content">
-                            <div class="content">
-                                <h1 class="title is-size-4">History 2</h1>
-                                <p class="subtitle is-size-5">
-                                    Recipe:
-                                </p>
-                                <div class="card">
-                                    <div class="card-content">
-                                      <div class="content">
-                                        Lorem ipsum leo risus, porta ac consectetur ac, vestibulum at eros. Donec id elit non mi porta gravida at eget metus. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Cras mattis consectetur purus sit amet fermentum.
-                                      </div>
-                                    </div>
-                                  </div>
-                            </div>
-                        </div>
-                    </article>
-                </div>
-                <div class="column is-half">
-                    <article class="media notification has-background-white">
-                        <figure class="media-left">
-                            <span class="icon">
-                                <i class="fa-solid fa-utensils fa-lg"></i>
-                            </span>
-                        </figure>
-                        <div class="media-content">
-                            <div class="content">
-                                <h1 class="title is-size-4">History 3</h1>
-                                <p class="subtitle is-size-5">
-                                    Recipe:
-                                </p>
-                                <div class="card">
-                                    <div class="card-content">
-                                      <div class="content">
-                                        Lorem ipsum leo risus, porta ac consectetur ac, vestibulum at eros. Donec id elit non mi porta gravida at eget metus. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Cras mattis consectetur purus sit amet fermentum.
-                                      </div>
-                                    </div>
-                                  </div>
-                            </div>
-                        </div>
-                    </article>
-                </div>
-                <div class="column is-half">
-                    <article class="media notification has-background-white">
-                        <figure class="media-left">
-                            <span class="icon">
-                                <i class="fa-solid fa-utensils fa-lg"></i>
-                            </span>
-                        </figure>
-                        <div class="media-content">
-                            <div class="content">
-                                <h1 class="title is-size-4">History 4</h1>
-                                <p class="subtitle is-size-5">
-                                    Recipe:
-                                </p>
-                                <div class="card">
-                                    <div class="card-content">
-                                      <div class="content">
-                                        Lorem ipsum leo risus, porta ac consectetur ac, vestibulum at eros. Donec id elit non mi porta gravida at eget metus. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Cras mattis consectetur purus sit amet fermentum.
-                                      </div>
-                                    </div>
-                                  </div>
-                            </div>
-                        </div>
-                    </article>
-                </div>
-    </section></section>
-
     
-<section id="resultPage" class="hide">
-
-    <div>
-        <div class="row">
-            <button id="homeButton">Home</button>
-            <h1 id="resultHeader"></h1>
-            <div>
-                <div id="recipeResult" class="column"></div>
-            </div>
-            <div>
-                <div id="resultTranslater" class="column"></div>
+    <section id="resultPage" class="section has-background-light mt-5">
+        <div class="container">
+            <div class="column is-5">
+                <div class="is-hidden"><button id="homeButton">Home</button></div>
+                <h1 id="resultHeader" class="title is-4"></h1>
+                <div>
+                    <div id="recipeResult" class="column title is-size-6"></div>
+                </div>
+                <div>
+                    <div id="resultTranslater" class="column title is-size-6"></div>
+                </div>
             </div>
         </div>
-    </div>
+    </section>
 
-
-
-
-</section>
 
 <script src="Assets/script.js"></script>
 </body>
