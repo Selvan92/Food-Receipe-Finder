@@ -2,10 +2,10 @@
 var resultPage=document.getElementById("resultPage")
 var landingPage=document.getElementById("landingPage")
 //dynamic elements added
-var resultHeader=document.createElement("h1");
-var recipeResult=document.createElement("div");
+var resultHeader=document.getElementById("resultHeader");
+var recipeResult=document.getElementById("recipeResult");
 //var resultTranslater=document.createElement("div");
-var homeButton=document.createElement("button");
+var homeButton=document.getElementById("homeButton");
 
 
 homeButton.addEventListener("clic",function(){ 
@@ -175,7 +175,7 @@ function getRecipe(){
 
 function translateRecipe(){
 	let translateObj = "";
-	let resultTranslater =document.createElement("div");
+	let resultTranslater =document.getElementById("resultTranslater");
 	resultPage.appendChild(resultTranslater);
 	Object.keys(recipeJson).forEach((key) => {
 		translateObj = [{"Text": `${recipeJson[`${key}`]}`}];
