@@ -3,24 +3,18 @@ var resultPage=document.getElementById("resultPage")
 var landingPage=document.getElementById("landingPage")
 //dynamic elements added
 var resultHeader=document.createElement("h1");
-var recipes=document.createElement("div");
+var recipeResult=document.createElement("div");
 var resultTranslater=document.createElement("div");
 var homeButton=document.createElement("button");
 
-//elements content add
 
-//resultHeader.innerHTML="Recipe Name";
-//recipes.innerHTML="Ingrediants go here";
-//resultTranslater.innerHTML="Translated language go's here";
-//homeButton.innerHTML="Home";
+homeButton.addEventListener("clic",function(){ 
+	homeButton.innerHTML="Home";
+    landingPage.classList.remove("hide");
+    resultPage.classList.add("hide");
+	resultPage.append(homeButton);
 
-
-//append the elements to the conatainer
-
-
-
-
-
+});
 
 const optionsMealDB = {
 	method: 'GET',
@@ -98,7 +92,7 @@ function getMealCategory(){
 			populateMealCategory();
 			return data;
 		})
-		.catch(err => console.error(err));	
+		//.catch(err => console.error(err));	
 } 
 
 function getLanguages(){
@@ -112,7 +106,7 @@ function getLanguages(){
 			populateLanguages();
 			return data;		
 		})
-		//.catch(err => console.error(err));
+		.catch(err => console.error(err));
 }
 
 function getData(){
@@ -161,7 +155,9 @@ function getRecipe(){
 			}
 			recipeJson['instructions'] = data['meals'][0].strInstructions;
 			console.log(recipeJson);
-			translateRecipe();		
+			translateRecipe();	
+
+            
 		})
 		.catch(err => console.error(err));
 }
@@ -191,22 +187,25 @@ function translateRecipe(){
 					return translatedRecipe;
 				})					
 			.catch(err => console.error(err)); 
+            console.log(translatedRecipe);	
 	});
-	console.log(translatedRecipe);	
+	
 }
 
 // This function needs to be written for displaying the recipes and its translation. 
   // Pls feel free to extend it. 
 function displayRecipe(){
 	getRecipe();
-    landingPage.classList.add("hide");
-	resultPage.classList.remove("hide");
    
-    resultPage.append(resultHeader,recipes,resultTranslater,homeButton);
+            landingPage.classList.add("hide");
+            resultPage.classList.remove("hide");
+            resultHeader.innerHTML=recipeJson[0].name;
+            recipeResult.innerHTML=recipeJson[0].ingredients + recipeJson[0].instructions;	
+
+            console.log(recipeJson);
+    resultTranslater.innerHTML=translatedRecipe[0].name + translatedRecipe[0].ingredients + translatedRecipe[0].instructions;
+    
+   
+    resultPage.append(resultHeader,recipeResult,resultTranslater);
     }
 
-homeButton.onclick=function showResultPage(){
-    resultPage.add("hide");
-    landingPage.remove("hide");
-   
-    }
