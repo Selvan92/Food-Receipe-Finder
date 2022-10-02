@@ -74,7 +74,11 @@ function getMealCategory(){
 			populateMealCategory();
 			return data;
 		})
-		.catch(err => console.error(err));	
+		.catch(err => {
+			mealCategories =["Vegetarian", "Vegan", "Breakfast", "Dessert", "Chicken", "Beef", "Soups", "Salads"];
+			populateMealCategory();
+			console.error(err);
+		})	
 } 
 
 function getLanguages(){
@@ -110,11 +114,16 @@ function getRecipesForCategory(){
 			console.log(data);
 			return data;
 		})
-		.catch(err => console.error(err)); 
+		.catch(err => {
+			recipesByCategory = ["Arrabiatta Penne", "Avacado Sandwich", "Garlic Bread", "Enchidillas"];
+			populateRecipeByCategory(recipesByCategory);
+			console.error(err);
+		}) 
+	}
 	/*$('#mealCategory').change(function(){
 		alert($(this).val());
 	})*/
-}
+
 
 function getRecipe(){
 	meal = document.getElementById("recipes").value;
@@ -141,7 +150,13 @@ function getRecipe(){
 			console.log(recipeJson);
 			translateRecipe();		
 		})
-		.catch(err => console.error(err));
+		.catch(err => {
+			recipeJson['name'] = "Arrabiatta Penne";
+			recipeJson['ingredients'] = ["250 gms penne pasta", "100 gms cheese", "5 ml olive oil"];
+			recipeJson['instructions'] = ["Boil the water.\r\n Add Pasta. After the pasta is cooked strain it. \r\n Heat olive oil. Add pasta, cheese and salt. Add some tomato ketchup\r\n"];
+			console.log(recipeJson);
+			translateRecipe();
+			console.error(err)});
 }
 
 /*The translate api used here throws the following error 
