@@ -5,15 +5,24 @@ var landingPage=document.getElementById("landingPage")
 var resultHeader=document.getElementById("resultHeader");
 var recipeResult=document.getElementById("recipeResult");
 var homeButton=document.getElementById("homeButton");
-let resultTranslater =document.getElementById("resultTranslater");
+var resultTranslater =document.getElementById("resultTranslater");
+var rrIngredients =document.getElementById("rrIngredients");
+var rrinstructions =document.getElementById("rrinstructions");
+var rtName =document.getElementById("rtName");
+var rtIngredients =document.getElementById("rtIngredients");
+var rtinstructions =document.getElementById("rtinstructions");
 
-homeButton.addEventListener("click",function(){ 
+
+
+
+
+/*homeButton.addEventListener("click",function(){ 
 	homeButton.innerHTML="Home";
     landingPage.classList.remove("hide");
     resultPage.classList.add("hide");
 
 
-});
+});*/
 
 const optionsMealDB = {
 	method: 'GET',
@@ -165,6 +174,8 @@ function getRecipe(){
 			}
 			recipeJson['instructions'] = data['meals'][0].strInstructions;
 			console.log(recipeJson);
+			resultHeader.innerHTML="Recipe Name: "+recipeJson["name"];
+			recipeResult.innerHTML= "Ingredients: " +"<br/>"+  recipeJson['ingredients']+"<br/>"+"<br/>"+"Instructions: "+"<br/>"+ recipeJson["instructions"];
 			translateRecipe();		
 		})
 		.catch(err => {
@@ -187,6 +198,7 @@ function getRecipe(){
    Solution 1: Disabling G-Zip Encoding @ https://appuals.com/how-to-fix-err_content_decoding_failed-error/ */ 
 function translateRecipe(){
 	let translateObj = "";
+	resultTranslater.innerHTML = "Translated Recipe:"+"<br/>";
 	Object.keys(recipeJson).forEach((key) => {
 		translateObj = [{"Text": `${recipeJson[`${key}`]}`}];
 		optionsTranslate['body'] = JSON.stringify(translateObj);
@@ -196,11 +208,15 @@ function translateRecipe(){
 				return response.json()})
 			.then((data) => {
 					translatedRecipe[`${key}`]=data[0].translations[0]['text'];
+					resultTranslater.innerHTML+= `${key}`+"</br>"+data[0].translations[0]['text'];
 					return translatedRecipe;
 				})					
-			.catch(err => console.error(err)); 
+			.catch(err => console.error(err));
+			
+			console.log(translatedRecipe); 
+			
 	});
-	console.log(translatedRecipe);	
+	
 }
 // This function needs to be written for displaying the recipes and its translation. 
   // Pls feel free to extend it.
@@ -210,13 +226,9 @@ function translateRecipe(){
 
   
 function displayRecipe(){
-	landingPage.classList.add("hide");
-    resultPage.classList.remove("hide");
-	//getRecipe(); this have been temporarily commented out because the server is down
-	recipeJson={"ingredients":"1kg ham,1 pound chicken", "name":"Arrabita", "instructions":"Take a bowl and boil the water."};
-	resultHeader.innerHTML=recipeJson["name"];
-    recipeResult.innerHTML=recipeJson["ingredients"] + recipeJson["instructions"];
-	resultTranslater.innerHTML=translatedRecipe["name"] + translatedRecipe["ingredients"] + translatedRecipe["instructions"];
+	//landingPage.classList.add("hide");
+    //resultPage.classList.remove("hide");
+	getRecipe(); 	
 	
 }
    
