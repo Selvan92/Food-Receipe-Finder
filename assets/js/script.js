@@ -41,26 +41,12 @@ var landingPage=document.getElementById("landingPage")
 //dynamic elements added
 var resultHeader=document.getElementById("resultHeader");
 var recipeResult=document.getElementById("recipeResult");
-var homeButton=document.getElementById("homeButton");
-var resultTranslater =document.getElementById("resultTranslater");
-var rrIngredients =document.getElementById("rrIngredients");
-var rrinstructions =document.getElementById("rrinstructions");
-var rtName =document.getElementById("rtName");
-var rtIngredients =document.getElementById("rtIngredients");
-var rtinstructions =document.getElementById("rtinstructions");
 var translaterHeader =document.getElementById("translaterHeader");
 var translaterIngredients =document.getElementById("translaterIngredients");
 var translaterInstructions =document.getElementById("translaterInstructions");
-var recipeButton=document.getElementById("Recipe");
 
 function clearBeforeSearch(){
 	recipeResult.innerHTML = "";
-	resultTranslater.innerHTML = "";
-	rrIngredients.innerHTML = "";
-	rrinstructions.innerHTML = "";
-	rtName.innerHTML = "";
-	rtIngredients.innerHTML = "" ;
-	rtinstructions.innerHTML = "";
 	translaterHeader.innerHTML = "";
 	translaterIngredients.innerHTML = "";
 	translaterInstructions.innerHTML = "";
@@ -76,12 +62,13 @@ function populateMealCategory(){
 }
 
 function populateLanguages(){
-	Object.keys(languages).forEach((language) => { 
-		let optEl = document.createElement('option');	
-		optEl.innerHTML = languages[`${language}`];
-		optEl.value = language;
+	for(let i = 0; i < languages.length; i++){ 
+		let optEl = document.createElement('option');
+		console.log(languages[i]);
+		optEl.innerHTML = languages[i]["value"];
+		optEl.value = languages[i]["index"];
 		document.getElementById("languages").appendChild(optEl);
-	})	
+	}
 }
 
 function populateRecipeByCategory(recipesByCategory){
@@ -120,23 +107,28 @@ function getMealCategory(){
 
 function getLanguages(){
 	console.log("Getting Supported Languages");
-	/*if (Object.keys(languages).length > 0){
+	if (Object.keys(languages).length > 0){
 		languages = JSON.parse(localStorage.getItem("languages"));
-	}*/
-	//else {
-	fetch('https://microsoft-translator-text.p.rapidapi.com/languages?api-version=3.0', optionsLanguageList)
-		.then(response => response.json())
-		.then((data) => {
-			Object.keys(data['translation']).forEach((key) => {
-				languages[`${key}`] = data['translation'][`${key}`]['name'];
+	}
+	else {
+		fetch('https://microsoft-translator-text.p.rapidapi.com/languages?api-version=3.0', optionsLanguageList)
+			.then(response => response.json())
+			.then((data) => {
+				Object.keys(data['translation']).forEach((key) => {
+					let language = { "index" : "",
+				 					"value" : "" };
+					language["index"] = key;
+					language["value"] = data['translation'][`${key}`]['name'];
+					languages.unshift(language);
+				})
+				//console.log(data);
+				//console.log(languages);	
+				populateLanguages();
+				localStorage.setItem("languages", JSON.stringify(languages));
+				return data;		
 			})
-			console.log(languages);	
-			populateLanguages();
-			//localStorage.setItem("languages", JSON.stringify(languages));
-			return data;		
-	})
-	.catch(err => console.error(err));
-	//}
+		.catch(err => console.error(err));
+	}
 }
 
 function getData(){
@@ -169,9 +161,10 @@ function getRecipesForCategory(){
 	/*$('#mealCategory').change(function(){
 		alert($(this).val());
 	})*/
-var arrayIngredients;
+
 
 function getRecipe(){
+	clearBeforeSearch();
 	meal = document.getElementById("recipes").value;
 	translateTo = document.getElementById("languages").value;
 	fetch('https://themealdb.p.rapidapi.com/search.php?s='+`${meal}`, optionsMealDB)
@@ -194,13 +187,11 @@ function getRecipe(){
 			}
 			recipeJson['instructions'] = data['meals'][0].strInstructions;
 			console.log(recipeJson);
+			/* added by Satya */
 			resultHeader.innerHTML="Recipe Name: "+recipeJson["name"];
-
-			var splitIngredients=  recipeJson["ingredients"];
-			arrayIngredients=splitIngredients.split("\n")
-			console.log(arrayIngredients);
-			arrayIngredients.pop()
-			let listIngredients=""
+			arrayIngredients =  recipeJson["ingredients"].split("\n");
+			arrayIngredients.pop();
+			let listIngredients="";
 			for (let i=0; i<arrayIngredients.length;i++){
 				listIngredients += "*"+arrayIngredients[i]+"<br>";
 			}
@@ -244,14 +235,12 @@ function getRecipe(){
                     else if(`${key}` === "ingredients"){
                         //write code for response text for ingredients
 						//translaterIngredients.innerHTML=data[0].translations[0]['text'];
-						var splitTransIngredients=  data[0].translations[0]['text'];
-						var arrayTransIngredients=splitTransIngredients.split("\n")
-						console.log(arrayTransIngredients);
-						arrayTransIngredients.pop()
-						let listTransIngredients=""
+						var arrayTransIngredients=data[0].translations[0]['text'].split("\n");
+						arrayTransIngredients.pop();
+						let listTransIngredients="";
 						for (let i=0; i<arrayTransIngredients.length;i++){
-						listTransIngredients += "*"+arrayTransIngredients[i]+"<br>";
-						translaterIngredients.innerHTML="Ingredients: " +"<br>"+"<br/>"+listTransIngredients + "<br>" + "Instructions:"+ "<br>"+"<br/>";
+							listTransIngredients += "*"+arrayTransIngredients[i]+"<br>";
+							translaterIngredients.innerHTML="Ingredients: " +"<br>"+"<br/>"+listTransIngredients + "<br>" + "Instructions:"+ "<br>"+"<br/>";
 						}
                     }
                     else { // its instructions
@@ -265,8 +254,6 @@ function getRecipe(){
     });
     console.log(translatedRecipe);
 }
-
-
 
 // This function needs to be written for displaying the recipes and its translation.   
 function displayRecipe(){
