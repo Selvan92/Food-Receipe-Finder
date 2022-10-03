@@ -11,12 +11,21 @@ var rrinstructions =document.getElementById("rrinstructions");
 var rtName =document.getElementById("rtName");
 var rtIngredients =document.getElementById("rtIngredients");
 var rtinstructions =document.getElementById("rtinstructions");
+var translaterHeader =document.getElementById("translaterHeader");
+var translaterIngredients =document.getElementById("translaterIngredients");
+var translaterInstructions =document.getElementById("translaterInstructions");
+
+var recipeButton=document.getElementById("Recipe");
 
 
 
+/*homeButton.addEventListener("click",function(){ 
+	homeButton.innerHTML="Home";
+    landingPage.classList.remove("hide");
+    resultPage.classList.add("hide");
 
 
-
+});*/
 
 const optionsMealDB = {
 	method: 'GET',
@@ -143,7 +152,7 @@ function getRecipesForCategory(){
 	/*$('#mealCategory').change(function(){
 		alert($(this).val());
 	})*/
-
+var arrayIngredients;
 
 function getRecipe(){
 	meal = document.getElementById("recipes").value;
@@ -169,7 +178,21 @@ function getRecipe(){
 			recipeJson['instructions'] = data['meals'][0].strInstructions;
 			console.log(recipeJson);
 			resultHeader.innerHTML="Recipe Name: "+recipeJson["name"];
-			recipeResult.innerHTML= "Ingredients: " +"<br/>"+  recipeJson['ingredients']+"<br/>"+"<br/>"+"Instructions: "+"<br/>"+ recipeJson["instructions"];
+
+			var splitIngredients=  recipeJson["ingredients"];
+			arrayIngredients=splitIngredients.split("\n")
+			console.log(arrayIngredients);
+			arrayIngredients.pop()
+			let listIngredients=""
+			for (let i=0; i<arrayIngredients.length;i++){
+				listIngredients += "*"+arrayIngredients[i]+"<br>";
+			}
+			
+			
+
+			recipeResult.innerHTML += "Ingredients: " +"<br>"+"<br/>"+ listIngredients +"<br/>"+"<br/>"+"Instructions: "+"<br>"+"<br/>"+recipeJson["instructions"];
+			
+			//recipeResult.innerHTML= "Ingredients: " +"<br/>"+  recipeJson['ingredients']+"<br/>"+"<br/>"+"Instructions: "+"<br/>"+ recipeJson["instructions"];
 			translateRecipe();		
 		})
 		.catch(err => {
@@ -190,30 +213,54 @@ function getRecipe(){
    This error happens when the hhtp request's header claim the content to be gzip encoded but it is not. 
    Hence gzip encoding needs to be disabled at the browser end. Follow the below link
    Solution 1: Disabling G-Zip Encoding @ https://appuals.com/how-to-fix-err_content_decoding_failed-error/ */ 
-function translateRecipe(){
-	let translateObj = "";
-	resultTranslater.innerHTML = "Translated Recipe:"+"<br/>";
-	Object.keys(recipeJson).forEach((key) => {
-		translateObj = [{"Text": `${recipeJson[`${key}`]}`}];
-		optionsTranslate['body'] = JSON.stringify(translateObj);
-		
-		fetch('https://microsoft-translator-text.p.rapidapi.com/translate?to%5B0%5D='+`${translateTo}`+'&api-version=3.0&profanityAction=NoAction&textType=plain', optionsTranslate, {cache: "no-store"})
-			.then((response) => {
-				return response.json()})
-			.then((data) => {
-					translatedRecipe[`${key}`]=data[0].translations[0]['text'];
-					resultTranslater.innerHTML+= `${key}`+"</br>"+data[0].translations[0]['text'];
-					return translatedRecipe;
-				})					
-			.catch(err => console.error(err));
-			
-			console.log(translatedRecipe); 
-			
-	});
-	
+   function translateRecipe(){
+    let translateObj = "";
+    Object.keys(recipeJson).forEach((key) => {
+        translateObj = [{"Text": `${recipeJson[`${key}`]}`}];
+        optionsTranslate['body'] = JSON.stringify(translateObj);
+        fetch('https://microsoft-translator-text.p.rapidapi.com/translate?to%5B0%5D='+`${translateTo}`+'&api-version=3.0&profanityAction=NoAction&textType=plain', optionsTranslate, {cache: "no-store"})
+            .then((response) => {
+                return response.json()})
+            .then((data) => {
+                    if (`${key}` === "name"){
+                        /* attach the text to the header";*/
+						translaterHeader.innerHTML=data[0].translations[0]['text'];
+
+                        console.log(data[0].translations[0]['text']);                 
+						
+			}			
+						
+					
+                    else if(`${key}` === "ingredients"){
+                        //write code for response text for ingredients
+						//translaterIngredients.innerHTML=data[0].translations[0]['text'];
+
+						var splitTransIngredients=  data[0].translations[0]['text'];
+						var arrayTransIngredients=splitTransIngredients.split("\n")
+						console.log(arrayTransIngredients);
+						arrayTransIngredients.pop()
+						let listTransIngredients=""
+						for (let i=0; i<arrayTransIngredients.length;i++){
+						listTransIngredients += "*"+arrayTransIngredients[i]+"<br>";
+						translaterIngredients.innerHTML="Ingredients: " +"<br>"+"<br/>"+listTransIngredients + "<br>" + "Instructions:"+ "<br>"+"<br/>";
+						}
+                    }
+                    else { // its instructions
+                        //write code for response text for instructions
+						translaterInstructions.innerHTML=data[0].translations[0]['text'];
+                    }
+                    translatedRecipe[`${key}`]=data[0].translations[0]['text'];
+                    return translatedRecipe;
+                })
+            .catch(err => console.error(err));
+    });
+    console.log(translatedRecipe);
 }
+
+
+
 // This function needs to be written for displaying the recipes and its translation. 
-  // Pls feel free to extend it.
+
 
 		
         	
@@ -227,4 +274,25 @@ function displayRecipe(){
 }
    
             
+
+recipeButton.addEventListener("click",input);
+var storageArr;
+var storagedata;
+
+function input(event) {
+event.preventDefault()
+	localStorage.setItem("StorageKey",storagedata)
+	storagedata=JSON.stringify(storageArr);
+	storageArr=JSON.parse(localStorage.getItem("storageKey"));
+	storageArr.push(arrayIngredients);
+  
+/*for (let i=0; i<storageArr.length;i--){
+	console.log(storageArr[i]);
+				//listIngredients += "*"+arrayIngredients[i]+"<br>";
+			}*/
+
+		}
+
+
+
 
