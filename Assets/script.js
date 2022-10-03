@@ -1,31 +1,3 @@
-//selectors
-var resultPage=document.getElementById("resultPage")
-var landingPage=document.getElementById("landingPage")
-//dynamic elements added
-var resultHeader=document.getElementById("resultHeader");
-var recipeResult=document.getElementById("recipeResult");
-var homeButton=document.getElementById("homeButton");
-var resultTranslater =document.getElementById("resultTranslater");
-var rrIngredients =document.getElementById("rrIngredients");
-var rrinstructions =document.getElementById("rrinstructions");
-var rtName =document.getElementById("rtName");
-var rtIngredients =document.getElementById("rtIngredients");
-var rtinstructions =document.getElementById("rtinstructions");
-var translaterHeader =document.getElementById("translaterHeader");
-var translaterIngredients =document.getElementById("translaterIngredients");
-var translaterInstructions =document.getElementById("translaterInstructions");
-
-var recipeButton=document.getElementById("Recipe");
-
-
-
-/*homeButton.addEventListener("click",function(){ 
-	homeButton.innerHTML="Home";
-    landingPage.classList.remove("hide");
-    resultPage.classList.add("hide");
-
-
-});*/
 
 const optionsMealDB = {
 	method: 'GET',
@@ -63,6 +35,23 @@ let recipeJson = {"name": "",
 let translatedRecipe ={};
 let mealCategories = [];
 let languages =[];
+/* added by satya */
+var resultPage=document.getElementById("resultPage")
+var landingPage=document.getElementById("landingPage")
+//dynamic elements added
+var resultHeader=document.getElementById("resultHeader");
+var recipeResult=document.getElementById("recipeResult");
+var translaterHeader =document.getElementById("translaterHeader");
+var translaterIngredients =document.getElementById("translaterIngredients");
+var translaterInstructions =document.getElementById("translaterInstructions");
+var recipeButton=document.getElementById("Recipe");
+
+function clearBeforeSearch(){
+	recipeResult.innerHTML = "";
+	translaterHeader.innerHTML = "";
+	translaterIngredients.innerHTML = "";
+	translaterInstructions.innerHTML = "";
+}
 
 function populateMealCategory(){
 	for(let i = 0; i < mealCategories.length; i++){
@@ -93,24 +82,35 @@ function populateRecipeByCategory(recipesByCategory){
 
 function getMealCategory(){
 	console.log("Getting Meal Category");
-	fetch('https://themealdb.p.rapidapi.com/list.php?c=list', optionsMealDB)
-		.then(response => response.json())
-		.then((data) => {
-			for (let i = 0; i < data['meals'].length; i++){
-				mealCategories.unshift(data['meals'][i]['strCategory']);
-			}
-			console.log(mealCategories);
-			populateMealCategory();
-			return data;
-		})
-		.catch(err => {
-			mealCategories =["Vegetarian", "Vegan", "Breakfast", "Dessert", "Chicken", "Beef", "Soups", "Salads"];
-			populateMealCategory();
-			console.error(err);
-		})	
+	if (mealCategories.length > 0){
+		mealCategories=JSON.parse(localStorage.getItem("mealCategories"));
+	}
+	else {
+		fetch('https://themealdb.p.rapidapi.com/list.php?c=list', optionsMealDB)
+			.then(response => response.json())
+			.then((data) => {
+				for (let i = 0; i < data['meals'].length; i++){
+					mealCategories.unshift(data['meals'][i]['strCategory']);
+				}
+				console.log(mealCategories);
+				populateMealCategory();
+				localStorage.setItem("mealCategories", JSON.stringify(mealCategories));
+				return data;
+			})
+			.catch(err => {
+				mealCategories =["Vegetarian", "Vegan", "Breakfast", "Dessert", "Chicken", "Beef", "Soups", "Salads"];
+				populateMealCategory();
+				console.error(err);
+			})	
+	}
 } 
 
 function getLanguages(){
+	console.log("Getting Supported Languages");
+	/*if (Object.keys(languages).length > 0){
+		languages = JSON.parse(localStorage.getItem("languages"));
+	}*/
+	//else {
 	fetch('https://microsoft-translator-text.p.rapidapi.com/languages?api-version=3.0', optionsLanguageList)
 		.then(response => response.json())
 		.then((data) => {
@@ -119,17 +119,21 @@ function getLanguages(){
 			})
 			console.log(languages);	
 			populateLanguages();
+			//localStorage.setItem("languages", JSON.stringify(languages));
 			return data;		
-		})
-		.catch(err => console.error(err));
+	})
+	.catch(err => console.error(err));
+	//}
 }
 
 function getData(){
 	getMealCategory();
 	getLanguages();
+	
 }
 
 function getRecipesForCategory(){
+	
 	categoryValue = document.getElementById("mealCategory").value;
 	let recipesByCategory = [];
 	fetch('https://themealdb.p.rapidapi.com/filter.php?c='+`${categoryValue}`, optionsMealDB)
@@ -183,13 +187,10 @@ function getRecipe(){
 			arrayIngredients=splitIngredients.split("\n")
 			console.log(arrayIngredients);
 			arrayIngredients.pop()
-			let listIngredients=""
+			let listIngredients="";
 			for (let i=0; i<arrayIngredients.length;i++){
 				listIngredients += "*"+arrayIngredients[i]+"<br>";
 			}
-			
-			
-
 			recipeResult.innerHTML += "Ingredients: " +"<br>"+"<br/>"+ listIngredients +"<br/>"+"<br/>"+"Instructions: "+"<br>"+"<br/>"+recipeJson["instructions"];
 			
 			//recipeResult.innerHTML= "Ingredients: " +"<br/>"+  recipeJson['ingredients']+"<br/>"+"<br/>"+"Instructions: "+"<br/>"+ recipeJson["instructions"];
@@ -225,21 +226,16 @@ function getRecipe(){
                     if (`${key}` === "name"){
                         /* attach the text to the header";*/
 						translaterHeader.innerHTML=data[0].translations[0]['text'];
-
-                        console.log(data[0].translations[0]['text']);                 
-						
-			}			
-						
-					
+						console.log(data[0].translations[0]['text']);
+					}                 
                     else if(`${key}` === "ingredients"){
                         //write code for response text for ingredients
 						//translaterIngredients.innerHTML=data[0].translations[0]['text'];
-
 						var splitTransIngredients=  data[0].translations[0]['text'];
 						var arrayTransIngredients=splitTransIngredients.split("\n")
 						console.log(arrayTransIngredients);
 						arrayTransIngredients.pop()
-						let listTransIngredients=""
+						let listTransIngredients="";
 						for (let i=0; i<arrayTransIngredients.length;i++){
 						listTransIngredients += "*"+arrayTransIngredients[i]+"<br>";
 						translaterIngredients.innerHTML="Ingredients: " +"<br>"+"<br/>"+listTransIngredients + "<br>" + "Instructions:"+ "<br>"+"<br/>";
@@ -259,41 +255,10 @@ function getRecipe(){
 
 
 
-// This function needs to be written for displaying the recipes and its translation. 
-
-
-		
-        	
-
-  
+// This function needs to be written for displaying the recipes and its translation.   
 function displayRecipe(){
 	//landingPage.classList.add("hide");
-    //resultPage.classList.remove("hide");
+	//resultPage.classList.remove("hide");
 	getRecipe(); 	
 	
 }
-   
-            
-
-recipeButton.addEventListener("click",input);
-var storageArr;
-var storagedata;
-
-function input(event) {
-event.preventDefault()
-	localStorage.setItem("StorageKey",storagedata)
-	storagedata=JSON.stringify(storageArr);
-	storageArr=JSON.parse(localStorage.getItem("storageKey"));
-	storageArr.push(arrayIngredients);
-  
-/*for (let i=0; i<storageArr.length;i--){
-	console.log(storageArr[i]);
-				//listIngredients += "*"+arrayIngredients[i]+"<br>";
-			}*/
-
-		}
-
-
-
-
-
