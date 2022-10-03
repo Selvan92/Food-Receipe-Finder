@@ -12,7 +12,7 @@ var rtName =document.getElementById("rtName");
 var rtIngredients =document.getElementById("rtIngredients");
 var rtinstructions =document.getElementById("rtinstructions");
 
-
+var recipeButton=document.getElementById("Recipe");
 
 
 
@@ -149,7 +149,7 @@ function getRecipesForCategory(){
 	/*$('#mealCategory').change(function(){
 		alert($(this).val());
 	})*/
-
+var arrayIngredients;
 
 function getRecipe(){
 	meal = document.getElementById("recipes").value;
@@ -175,7 +175,28 @@ function getRecipe(){
 			recipeJson['instructions'] = data['meals'][0].strInstructions;
 			console.log(recipeJson);
 			resultHeader.innerHTML="Recipe Name: "+recipeJson["name"];
-			recipeResult.innerHTML= "Ingredients: " +"<br/>"+  recipeJson['ingredients']+"<br/>"+"<br/>"+"Instructions: "+"<br/>"+ recipeJson["instructions"];
+
+			var splitIngredients=  recipeJson["ingredients"];
+			arrayIngredients=splitIngredients.split("\n")
+			console.log(arrayIngredients);
+			arrayIngredients.pop()
+			let listIngredients=""
+			for (let i=0; i<arrayIngredients.length;i++){
+				listIngredients += "*"+arrayIngredients[i]+"<br>";
+			}
+			
+			var splitInstructions=  recipeJson["instructions"];
+
+			var arrayInstructions=splitInstructions.split(",")
+			arrayInstructions.pop()
+			let listInstructions=""
+			for (let i=0; i<arrayInstructions.length;i++){
+				listInstructions += "*"+arrayInstructions[i]+"<br>";
+			}
+
+			recipeResult.innerHTML += "Ingredients: " +"<br>"+"<br/>"+ listIngredients +"<br/>"+"<br/>"+"Instructions: "+"<br>"+"<br/>"+listInstructions;
+			
+			//recipeResult.innerHTML= "Ingredients: " +"<br/>"+  recipeJson['ingredients']+"<br/>"+"<br/>"+"Instructions: "+"<br/>"+ recipeJson["instructions"];
 			translateRecipe();		
 		})
 		.catch(err => {
@@ -210,10 +231,10 @@ function translateRecipe(){
 					translatedRecipe[`${key}`]=data[0].translations[0]['text'];
 					resultTranslater.innerHTML+= `${key}`+"</br>"+data[0].translations[0]['text'];
 					return translatedRecipe;
-				})					
-			.catch(err => console.error(err));
 			
-			console.log(translatedRecipe); 
+				})					
+		
+			
 			
 	});
 	
@@ -233,4 +254,26 @@ function displayRecipe(){
 }
    
             
+
+recipeButton.addEventListener("click",input);
+var storageArr;
+var storagedata;
+
+function input(event) {
+event.preventDefault()
+	localStorage.setItem("StorageKey",storagedata)
+	storagedata=JSON.stringify(storageArr);
+	storageArr=JSON.parse(localStorage.getItem("storageKey"));
+	storageArr.push(arrayIngredients);
+  
+/*for (let i=0; i<storageArr.length;i--){
+	console.log(storageArr[i]);
+				//listIngredients += "*"+arrayIngredients[i]+"<br>";
+			}*/
+
+		}
+
+
+
+
 
