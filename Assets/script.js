@@ -16,13 +16,7 @@ var rtinstructions =document.getElementById("rtinstructions");
 
 
 
-/*homeButton.addEventListener("click",function(){ 
-	homeButton.innerHTML="Home";
-    landingPage.classList.remove("hide");
-    resultPage.classList.add("hide");
 
-
-});*/
 
 const optionsMealDB = {
 	method: 'GET',
