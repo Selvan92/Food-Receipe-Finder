@@ -11,7 +11,7 @@ const optionsTranslate = {
 	method: 'POST',
 	headers: {
 		'content-type': 'application/json',
-		'X-RapidAPI-Key': 'c52b535671mshe1a06b44b7f40dfp159c1ajsn13d1052232bd',
+		'X-RapidAPI-Key': '16748a5648msh80460ddd9e7aafdp14264ajsn44a25d54bac8',
 		'X-RapidAPI-Host': 'microsoft-translator-text.p.rapidapi.com'
 	},
 	body: '[{"Text":""}]'
@@ -20,7 +20,7 @@ const optionsTranslate = {
 const optionsLanguageList = {
 	method: 'GET',
 	headers: {
-		'X-RapidAPI-Key': 'c52b535671mshe1a06b44b7f40dfp159c1ajsn13d1052232bd',
+		'X-RapidAPI-Key': '16748a5648msh80460ddd9e7aafdp14264ajsn44a25d54bac8',
 		'X-RapidAPI-Host': 'microsoft-translator-text.p.rapidapi.com'
 	}
 };
